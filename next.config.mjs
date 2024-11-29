@@ -80,7 +80,8 @@ if (mode !== "export") {
       },
       {
         source: "/api/proxy/openai/:path*",
-        destination: "https://api.openai.com/:path*",
+        // destination: "https://api.openai.com/:path*",
+        destination: "https://api.ablai.top/:path*",
       },
       {
         source: "/api/proxy/anthropic/:path*",
