@@ -129,7 +129,9 @@ export const getServerSideConfig = () => {
     if (customModels) customModels += ",";
     customModels += DEFAULT_MODELS.filter(
       (m) =>
-        (m.name.startsWith("gpt-4") || m.name.startsWith("chatgpt-4o") || m.name.startsWith("o1")) &&
+        (m.name.startsWith("gpt-4") ||
+          m.name.startsWith("chatgpt-4o") ||
+          m.name.startsWith("o1")) &&
         !m.name.startsWith("gpt-4o-mini"),
     )
       .map((m) => "-" + m.name)
@@ -168,6 +170,8 @@ export const getServerSideConfig = () => {
   const allowedWebDavEndpoints = (
     process.env.WHITE_WEBDAV_ENDPOINTS ?? ""
   ).split(",");
+
+  console.log("show set apiKey:", getApiKey(process.env.OPENAI_API_KEY));
 
   return {
     baseUrl: process.env.BASE_URL,

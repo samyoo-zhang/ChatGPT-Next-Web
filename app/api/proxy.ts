@@ -36,6 +36,7 @@ export async function handle(
   // if dalle3 use openai api key
   const baseUrl = req.headers.get("x-base-url");
   // if (baseUrl?.includes("api.openai.com")) {
+  console.log("show serverConfig.apiKey:", serverConfig.apiKey);
   // 阿波罗AI
   if (baseUrl?.includes("api.ablai.top")) {
     if (!serverConfig.apiKey) {
