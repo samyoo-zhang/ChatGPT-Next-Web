@@ -192,6 +192,7 @@ export function stream(
       const fetchText = remainText.slice(0, fetchCount);
       responseText += fetchText;
       remainText = remainText.slice(fetchCount);
+      console.log("show update here:", responseText, fetchText);
       options.onUpdate?.(responseText, fetchText);
     }
 
@@ -273,7 +274,9 @@ export function stream(
       }
       console.debug("[ChatAPI] end");
       finished = true;
+      console.log("show onFinish here:", responseText);
       options.onFinish(responseText + remainText, responseRes); // 将res传递给onFinish
+      // options.onFinish(`Hello World ${Date.now()}`, responseRes); // 将res传递给onFinish
     }
   };
 
@@ -302,6 +305,7 @@ export function stream(
       fetch: tauriFetch as any,
       ...chatPayload,
       async onopen(res) {
+        console.log("show onopen:", res);
         clearTimeout(requestTimeoutId);
         const contentType = res.headers.get("content-type");
         console.log("[Request] response content type: ", contentType);
@@ -309,6 +313,7 @@ export function stream(
 
         if (contentType?.startsWith("text/plain")) {
           responseText = await res.clone().text();
+          console.log("show onopen1:", responseText);
           return finish();
         }
 
@@ -320,6 +325,7 @@ export function stream(
           res.status !== 200
         ) {
           const responseTexts = [responseText];
+          console.log("show onopen12:", responseTexts);
           let extraInfo = await res.clone().text();
           try {
             const resJson = await res.clone().json();
@@ -335,11 +341,13 @@ export function stream(
           }
 
           responseText = responseTexts.join("\n\n");
+          console.log("show onopen123:", responseText);
 
           return finish();
         }
       },
       onmessage(msg) {
+        console.log("show onmessage:", msg);
         if (msg.data === "[DONE]" || finished) {
           return finish();
         }
