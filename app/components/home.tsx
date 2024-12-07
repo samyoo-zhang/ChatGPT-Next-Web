@@ -17,7 +17,8 @@ import { ErrorBoundary } from "./error";
 import { getISOLang, getLang } from "../locales";
 
 import {
-  HashRouter as Router,
+  // HashRouter as Router,
+  BrowserRouter as Router,
   Routes,
   Route,
   useLocation,
@@ -149,7 +150,7 @@ export function WindowContent(props: { children: React.ReactNode }) {
   );
 }
 
-function Screen() {
+function HomeContainer() {
   const config = useAppConfig();
   const location = useLocation();
   const isArtifact = location.pathname.includes(Path.Artifacts);
@@ -242,7 +243,7 @@ export function Home() {
   return (
     <ErrorBoundary>
       <Router>
-        <Screen />
+        <HomeContainer />
       </Router>
     </ErrorBoundary>
   );

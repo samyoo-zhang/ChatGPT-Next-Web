@@ -1721,6 +1721,10 @@ function _Chat() {
                   !isContext;
                 const showTyping = message.preview || message.streaming;
 
+                if (showTyping && isUser) {
+                  return null;
+                }
+
                 const shouldShowClearContextDivider =
                   i === clearContextIndex - 1;
 
