@@ -233,6 +233,9 @@ export function showToast(
   action?: ToastProps["action"],
   delay = 3000,
 ) {
+  console.log("show showToast here:", content);
+  return;
+
   const div = document.createElement("div");
   div.className = styles.show;
   document.body.appendChild(div);
