@@ -46,6 +46,8 @@ async function request(req: NextRequest) {
 
   let baseUrl = serverConfig.siliconFlowUrl || SILICONFLOW_BASE_URL;
 
+  console.log("show siliconFlow request:", baseUrl);
+
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;
   }
@@ -109,6 +111,8 @@ async function request(req: NextRequest) {
     }
   }
   try {
+    console.log("show before request:", fetchUrl);
+
     const res = await fetch(fetchUrl, fetchOptions);
 
     // to prevent browser prompt for credentials

@@ -175,11 +175,17 @@ export const getServerSideConfig = () => {
     process.env.WHITE_WEBDAV_ENDPOINTS ?? ""
   ).split(",");
 
-  console.log("show set apiKey:", getApiKey(process.env.OPENAI_API_KEY));
+  // console.log(
+  //   "show set apiKey:",
+  //   getApiKey(process.env.OPENAI_API_KEY),
+  //   getApiKey(process.env.DEEPSEEK_API_KEY),
+  // );
+
+  const baseKey = getApiKey(process.env.OPENAI_API_KEY);
 
   return {
     baseUrl: process.env.BASE_URL,
-    apiKey: getApiKey(process.env.OPENAI_API_KEY),
+    apiKey: baseKey,
     openaiOrgId: process.env.OPENAI_ORG_ID,
 
     isStability,
@@ -228,7 +234,7 @@ export const getServerSideConfig = () => {
     iflytekApiSecret: process.env.IFLYTEK_API_SECRET,
 
     isDeepSeek,
-    deepseekUrl: process.env.DEEPSEEK_URL,
+    deepseekUrl: process.env.DEEPSEEK_URL || process.env.BASE_URL,
     deepseekApiKey: getApiKey(process.env.DEEPSEEK_API_KEY),
 
     isXAI,
@@ -246,7 +252,7 @@ export const getServerSideConfig = () => {
 
     isSiliconFlow,
     siliconFlowUrl: process.env.SILICONFLOW_URL,
-    siliconFlowApiKey: getApiKey(process.env.SILICONFLOW_API_KEY),
+    siliconFlowApiKey: getApiKey(process.env.SILICONFLOW_API_KEY) || baseKey,
 
     gtmId: process.env.GTM_ID,
     gaId: process.env.GA_ID || DEFAULT_GA_ID,

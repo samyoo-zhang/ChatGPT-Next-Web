@@ -113,6 +113,7 @@ export function auth(req: NextRequest, modelProvider: ModelProvider) {
           systemApiKey = serverConfig.apiKey;
         }
     }
+    // console.log("show modelProvider:", modelProvider, 112, systemApiKey);
 
     if (systemApiKey) {
       console.log("[Auth] use system api key");

@@ -46,6 +46,8 @@ async function request(req: NextRequest) {
 
   let baseUrl = serverConfig.deepseekUrl || DEEPSEEK_BASE_URL;
 
+  console.log("show deepseek request:", baseUrl);
+
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;
   }
@@ -108,6 +110,8 @@ async function request(req: NextRequest) {
       console.error(`[DeepSeek] filter`, e);
     }
   }
+  // console.log("show before fetch:", fetchUrl, fetchOptions);
+
   try {
     const res = await fetch(fetchUrl, fetchOptions);
 
