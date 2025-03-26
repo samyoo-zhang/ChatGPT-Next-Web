@@ -7,6 +7,7 @@ services:
     ports:
       - 3000:3000
     environment:
+      - DEEPSEEK_API_KEY=$DEEPSEEK_API_KEY
       - OPENAI_API_KEY=$OPENAI_API_KEY
       - GOOGLE_API_KEY=$GOOGLE_API_KEY
       - CODE=$CODE
@@ -26,6 +27,7 @@ services:
       - 3000:3000
     environment:
       - OPENAI_API_KEY=$OPENAI_API_KEY
+      - DEEPSEEK_API_KEY=$DEEPSEEK_API_KEY
       - GOOGLE_API_KEY=$GOOGLE_API_KEY
       - CODE=$CODE
       - PROXY_URL=$PROXY_URL
