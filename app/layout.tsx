@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-page-custom-font */
+/* eslint-disable */
 import "./styles/globals.scss";
 import "./styles/markdown.scss";
 import "./styles/highlight.scss";
@@ -16,29 +16,6 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
   },
 };
-
-document.addEventListener("click", function (event) {
-  const target: any = event.target;
-  // 检查点击的目标是否是 <a> 标签
-  if (target?.tagName === "A") {
-    // 阻止默认行为（跳转）
-    event.preventDefault();
-
-    // 获取 <a> 标签的 href 属性
-    const href = target?.getAttribute("href");
-    const url = decodeURIComponent(href);
-    // 自定义处理逻辑
-    console.log("拦截到链接点击:", href, url);
-
-    if (url.startsWith("#")) {
-      // 锚点滚动
-      document.querySelector(url)?.scrollIntoView();
-    } else {
-      // 如果需要跳转，可以手动处理
-      window.open(url);
-    }
-  }
-});
 
 export const viewport: Viewport = {
   width: "device-width",

@@ -1,3 +1,4 @@
+"use client";
 import { useDebouncedCallback } from "use-debounce";
 import React, {
   Fragment,
@@ -2167,5 +2168,36 @@ function _Chat() {
 export function Chat() {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
+  useEffect(() => {
+    console.log("show init click");
+
+    const callback = (event: MouseEvent) => {
+      const target: any = event.target;
+      // 检查点击的目标是否是 <a> 标签
+      if (target?.tagName === "A") {
+        // 阻止默认行为（跳转）
+        event.preventDefault();
+
+        // 获取 <a> 标签的 href 属性
+        const href = target?.getAttribute("href");
+        const url = decodeURIComponent(href);
+        // 自定义处理逻辑
+        console.log("拦截到链接点击:", href, url);
+
+        if (url.startsWith("#")) {
+          // 锚点滚动
+          document.querySelector(url)?.scrollIntoView();
+        } else {
+          // 如果需要跳转，可以手动处理
+          window.open(url);
+        }
+      }
+    };
+    document.addEventListener("click", callback);
+    return () => {
+      console.log("show remove click");
+      document.removeEventListener("click", callback);
+    };
+  }, []);
   return <_Chat key={session.id}></_Chat>;
 }
