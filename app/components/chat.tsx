@@ -126,6 +126,7 @@ import { getModelProvider } from "../utils/model";
 import { RealtimeChat } from "@/app/components/realtime-chat";
 import clsx from "clsx";
 import { getAvailableClientsCount, isMcpEnabled } from "../mcp/actions";
+import { scrollTargetElement } from "../utils/link";
 
 const localStorage = safeLocalStorage();
 
@@ -468,12 +469,12 @@ function useScrollToBottom(
     }
   }, [scrollRef]);
 
-  // auto scroll
-  useEffect(() => {
-    if (autoScroll && !detach) {
-      scrollDomToBottom();
-    }
-  });
+  // // auto scroll
+  // useEffect(() => {
+  //   if (autoScroll && !detach) {
+  //     scrollDomToBottom();
+  //   }
+  // });
 
   // auto scroll when messages length changes
   const lastMessagesLength = useRef(messages.length);
@@ -1425,6 +1426,8 @@ function _Chat() {
   };
 
   function scrollToBottom() {
+    console.warn("show scrollToBottom++++++++:");
+
     setMsgRenderIndex(renderMessages.length - CHAT_PAGE_SIZE);
     scrollDomToBottom();
   }
@@ -1796,6 +1799,10 @@ function _Chat() {
                   const shouldShowClearContextDivider =
                     i === clearContextIndex - 1;
 
+                  if (isUser && showTyping) {
+                    return null;
+                  }
+
                   return (
                     <Fragment key={message.id}>
                       <div
@@ -2084,8 +2091,8 @@ function _Chat() {
                   onInput={(e) => onInput(e.currentTarget.value)}
                   value={userInput}
                   onKeyDown={onInputKeyDown}
-                  onFocus={scrollToBottom}
-                  onClick={scrollToBottom}
+                  // onFocus={scrollToBottom}
+                  // onClick={scrollToBottom}
                   onPaste={handlePaste}
                   rows={inputRows}
                   autoFocus={autoFocus}
@@ -2186,7 +2193,7 @@ export function Chat() {
 
         if (url.startsWith("#")) {
           // 锚点滚动
-          document.querySelector(url)?.scrollIntoView();
+          scrollTargetElement(target);
         } else {
           // 如果需要跳转，可以手动处理
           window.open(url);
