@@ -14,9 +14,18 @@
 
 </div>
 
+## Sponsor AI API
+
+<a href='https://302.ai/'>
+  <img src="https://github.com/user-attachments/assets/d8c0c513-1e18-4d3b-a2a9-ff3696aec0d4" width="100%" alt="icon"/>
+</a>
+
+[302.AI](https://302.ai/) 是一个按需付费的AI应用平台，提供市面上最全的AI API和AI在线应用。
+
 ## 企业版
 
 满足您公司私有化部署和定制需求
+
 - **品牌定制**：企业量身定制 VI/UI，与企业品牌形象无缝契合
 - **资源集成**：由企业管理人员统一配置和管理数十种 AI 资源，团队成员开箱即用
 - **权限管理**：成员权限、资源权限、知识库权限层级分明，企业级 Admin Panel 统一控制
@@ -28,7 +37,6 @@
 企业版咨询: **business@nextchat.dev**
 
 <img width="300" src="https://github.com/user-attachments/assets/bb29a11d-ff75-48a8-b1f8-d2d7238cf987">
-
 
 ## 开始使用
 
@@ -203,7 +211,6 @@ DeepSeek Api Key.
 
 DeepSeek Api Url.
 
-
 ### `HIDE_USER_API_KEY` （可选）
 
 如果你不想让用户自行填入 API Key，将此环境变量设置为 1 即可。
@@ -223,8 +230,9 @@ DeepSeek Api Url.
 ### `WHITE_WEBDAV_ENDPOINTS` (可选)
 
 如果你想增加允许访问的webdav服务地址，可以使用该选项，格式要求：
+
 - 每一个地址必须是一个完整的 endpoint
-> `https://xxxx/xxx`
+  > `https://xxxx/xxx`
 - 多个地址以`,`相连
 
 ### `CUSTOM_MODELS` （可选）
@@ -235,12 +243,13 @@ DeepSeek Api Url.
 用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。
 
 在Azure的模式下，支持使用`modelName@Azure=deploymentName`的方式配置模型名称和部署名称(deploy-name)
+
 > 示例：`+gpt-3.5-turbo@Azure=gpt35`这个配置会在模型列表显示一个`gpt35(Azure)`的选项。
 > 如果你只能使用Azure模式，那么设置 `-all,+gpt-3.5-turbo@Azure=gpt35` 则可以让对话的默认使用 `gpt35(Azure)`
 
 在ByteDance的模式下，支持使用`modelName@bytedance=deploymentName`的方式配置模型名称和部署名称(deploy-name)
-> 示例: `+Doubao-lite-4k@bytedance=ep-xxxxx-xxx`这个配置会在模型列表显示一个`Doubao-lite-4k(ByteDance)`的选项
 
+> 示例: `+Doubao-lite-4k@bytedance=ep-xxxxx-xxx`这个配置会在模型列表显示一个`Doubao-lite-4k(ByteDance)`的选项
 
 ### `DEFAULT_MODEL` （可选）
 
@@ -277,6 +286,14 @@ SiliconFlow API Key.
 
 SiliconFlow API URL.
 
+### `AI302_API_KEY` (optional)
+
+302.AI API Key.
+
+### `AI302_URL` (optional)
+
+302.AI API URL.
+
 ## 开发
 
 点击下方按钮，开始二次开发：
@@ -301,6 +318,7 @@ BASE_URL=https://b.nextweb.fun/api/proxy
 ## 部署
 
 ### 宝塔面板部署
+
 > [简体中文 > 如何通过宝塔一键部署](./docs/bt-cn.md)
 
 ### 容器部署 （推荐）
