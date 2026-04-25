@@ -109,10 +109,11 @@ export function auth(req: NextRequest, modelProvider: ModelProvider) {
         if (req.nextUrl.pathname.includes("azure/deployments")) {
           systemApiKey = serverConfig.azureApiKey;
         } else {
-          console.log("show switch apiKey:", serverConfig.apiKey);
+          // console.log("show switch apiKey:", serverConfig.apiKey);
           systemApiKey = serverConfig.apiKey;
         }
     }
+    // console.log("show modelProvider:", modelProvider, 112, systemApiKey);
 
     if (systemApiKey) {
       console.log("[Auth] use system api key");

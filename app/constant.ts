@@ -11,9 +11,10 @@ export const RUNTIME_CONFIG_DOM = "danger-runtime-config";
 
 export const STABILITY_BASE_URL = "https://api.stability.ai";
 
+export const BASE_URL = "https://api.ablai.top";
 // export const OPENAI_BASE_URL = "https://api.openai.com";
 // 阿波罗AI
-export const OPENAI_BASE_URL = "https://api.ablai.top";
+export const OPENAI_BASE_URL = BASE_URL;
 export const ANTHROPIC_BASE_URL = "https://api.anthropic.com";
 
 export const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/";
@@ -30,13 +31,15 @@ export const TENCENT_BASE_URL = "https://hunyuan.tencentcloudapi.com";
 export const MOONSHOT_BASE_URL = "https://api.moonshot.ai";
 export const IFLYTEK_BASE_URL = "https://spark-api-open.xf-yun.com";
 
-export const DEEPSEEK_BASE_URL = "https://api.deepseek.com";
+// export const DEEPSEEK_BASE_URL = "https://api.deepseek.com";
+export const DEEPSEEK_BASE_URL = OPENAI_BASE_URL;
 
 export const XAI_BASE_URL = "https://api.x.ai";
 
 export const CHATGLM_BASE_URL = "https://open.bigmodel.cn";
 
-export const SILICONFLOW_BASE_URL = "https://api.siliconflow.cn";
+// export const SILICONFLOW_BASE_URL = "https://api.siliconflow.cn";
+export const SILICONFLOW_BASE_URL = BASE_URL;
 
 export const AI302_BASE_URL = "https://api.302.ai";
 
@@ -705,18 +708,26 @@ const chatglmModels = [
 const siliconflowModels = [
   "Qwen/Qwen2.5-7B-Instruct",
   "Qwen/Qwen2.5-72B-Instruct",
+  "deepseek-reasoner-all",
+  "deepseek-r1",
+  "deepseek-v3",
+  "deepseek-r1:70b",
+  "deepseek-r1-search",
+  "deepseek-reasoner",
+  "deepseek-search",
+  "deepseek-chat",
+  "deepseek-r1:8b",
+  "deepseek-ai/deepseek-vl2",
+  "deepseek-llm-67b-chat",
+  "deepseek-r1-metasearch",
+  "deepseek-r1:1.5b",
+  "deepseek-ai/Janus-Pro-7B",
+  "deepseek-v3-0324",
+  "deepseek-coder-v2-instruct",
+  "deepseek-reasoner-164k",
   "deepseek-ai/DeepSeek-R1",
-  "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
-  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
-  "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
-  "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-  "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
-  "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-  "deepseek-ai/DeepSeek-V3",
   "meta-llama/Llama-3.3-70B-Instruct",
   "THUDM/glm-4-9b-chat",
-  "Pro/deepseek-ai/DeepSeek-R1",
-  "Pro/deepseek-ai/DeepSeek-V3",
 ];
 
 const ai302Models = [

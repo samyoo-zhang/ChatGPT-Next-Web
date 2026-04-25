@@ -1,3 +1,4 @@
+"use client";
 import { useDebouncedCallback } from "use-debounce";
 import React, {
   Fragment,
@@ -125,6 +126,7 @@ import { getModelProvider } from "../utils/model";
 import { RealtimeChat } from "@/app/components/realtime-chat";
 import clsx from "clsx";
 import { getAvailableClientsCount, isMcpEnabled } from "../mcp/actions";
+import { scrollTargetElement } from "../utils/link";
 
 const localStorage = safeLocalStorage();
 
@@ -467,12 +469,12 @@ function useScrollToBottom(
     }
   }, [scrollRef]);
 
-  // auto scroll
-  useEffect(() => {
-    if (autoScroll && !detach) {
-      scrollDomToBottom();
-    }
-  });
+  // // auto scroll
+  // useEffect(() => {
+  //   if (autoScroll && !detach) {
+  //     scrollDomToBottom();
+  //   }
+  // });
 
   // auto scroll when messages length changes
   const lastMessagesLength = useRef(messages.length);
@@ -1424,6 +1426,8 @@ function _Chat() {
   };
 
   function scrollToBottom() {
+    console.warn("show scrollToBottom++++++++:");
+
     setMsgRenderIndex(renderMessages.length - CHAT_PAGE_SIZE);
     scrollDomToBottom();
   }
@@ -1795,6 +1799,10 @@ function _Chat() {
                   const shouldShowClearContextDivider =
                     i === clearContextIndex - 1;
 
+                  if (isUser && showTyping) {
+                    return null;
+                  }
+
                   return (
                     <Fragment key={message.id}>
                       <div
@@ -2083,8 +2091,8 @@ function _Chat() {
                   onInput={(e) => onInput(e.currentTarget.value)}
                   value={userInput}
                   onKeyDown={onInputKeyDown}
-                  onFocus={scrollToBottom}
-                  onClick={scrollToBottom}
+                  // onFocus={scrollToBottom}
+                  // onClick={scrollToBottom}
                   onPaste={handlePaste}
                   rows={inputRows}
                   autoFocus={autoFocus}
@@ -2167,5 +2175,36 @@ function _Chat() {
 export function Chat() {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
+  useEffect(() => {
+    console.log("show init click");
+
+    const callback = (event: MouseEvent) => {
+      const target: any = event.target;
+      // 检查点击的目标是否是 <a> 标签
+      if (target?.tagName === "A") {
+        // 阻止默认行为（跳转）
+        event.preventDefault();
+
+        // 获取 <a> 标签的 href 属性
+        const href = target?.getAttribute("href");
+        const url = decodeURIComponent(href);
+        // 自定义处理逻辑
+        console.log("拦截到链接点击:", href, url);
+
+        if (url.startsWith("#")) {
+          // 锚点滚动
+          scrollTargetElement(target);
+        } else {
+          // 如果需要跳转，可以手动处理
+          window.open(url);
+        }
+      }
+    };
+    document.addEventListener("click", callback);
+    return () => {
+      console.log("show remove click");
+      document.removeEventListener("click", callback);
+    };
+  }, []);
   return <_Chat key={session.id}></_Chat>;
 }
