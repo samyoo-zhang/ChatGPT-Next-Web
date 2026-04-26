@@ -624,7 +624,7 @@ const alibabaModes = [
   "qwen-vl-max",
 ];
 
-const tencentModels = [
+const tencentModels: any[] = [
   // "hunyuan-pro",
   // "hunyuan-standard",
   // "hunyuan-lite",
