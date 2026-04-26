@@ -96,6 +96,8 @@ export interface LLMModel {
   available: boolean;
   provider: LLMModelProvider;
   sorted: number;
+  created?: number;
+  groundName?: string;
 }
 
 export interface LLMModelProvider {

@@ -61,6 +61,8 @@ export function collectModelTable(
       sorted: number;
       provider?: LLMModel["provider"]; // Marked as optional
       isDefault?: boolean;
+      groundName?: string;
+      created?: number;
     }
   > = {};
 
@@ -240,19 +242,33 @@ export function isModelNotavailableInServer(
     return true;
   }
 
+  // If no custom model restrictions are set, allow everything
+  if (!customModels || customModels.trim() === "") {
+    return false;
+  }
+
   const modelTable = collectModelTable(DEFAULT_MODELS, customModels);
 
   const providerNamesArray = Array.isArray(providerNames)
     ? providerNames
     : [providerNames];
   for (const providerName of providerNamesArray) {
-    // if model provider is bytedance, use model config name to check if not avaliable
+    // if model provider is bytedance, use model config name to check if not available
     if (providerName === ServiceProvider.ByteDance) {
-      return !Object.values(modelTable).filter((v) => v.name === modelName)?.[0]
-        ?.available;
+      const entry = Object.values(modelTable).find((v) => v.name === modelName);
+      // Unknown model (not in table) is allowed by default
+      if (!entry) return false;
+      return entry.available === false;
     }
     const fullName = `${modelName}@${providerName.toLowerCase()}`;
-    if (modelTable?.[fullName]?.available === true) return false;
+    const entry = modelTable?.[fullName];
+    // Unknown model (not in DEFAULT_MODELS and not in customModels) is allowed by default
+    if (!entry) continue;
+    // Explicitly enabled: not blocked
+    if (entry.available === true) return false;
+    // Explicitly disabled: blocked
+    if (entry.available === false) return true;
   }
-  return true;
+  // Model not explicitly mentioned for any provider: allow (supports dynamic models)
+  return false;
 }

@@ -49,6 +49,7 @@ import PluginIcon from "../icons/plugin.svg";
 import ShortcutkeyIcon from "../icons/shortcutkey.svg";
 import McpToolIcon from "../icons/tool.svg";
 import HeadphoneIcon from "../icons/headphone.svg";
+import ZoomIcon from "../icons/zoom.svg";
 import {
   BOT_HELLO,
   ChatMessage,
@@ -122,7 +123,6 @@ import { createTTSPlayer } from "../utils/audio";
 import { MsEdgeTTS, OUTPUT_FORMAT } from "../utils/ms_edge_tts";
 
 import { isEmpty } from "lodash-es";
-import { getModelProvider } from "../utils/model";
 import { RealtimeChat } from "@/app/components/realtime-chat";
 import clsx from "clsx";
 import { getAvailableClientsCount, isMcpEnabled } from "../mcp/actions";
@@ -380,6 +380,204 @@ export function PromptHints(props: {
     </div>
   );
 }
+
+// -------- 吸顶搜索框 --------
+function ModelSearchInput({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    ref.current?.focus();
+  }, []);
+  return (
+    <div className={styles["model-selector-search"]}>
+      <ZoomIcon className={styles["model-selector-search-icon"]} />
+      <input
+        ref={ref}
+        type="text"
+        placeholder="搜索模型…"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      {value && (
+        <button
+          className={styles["model-selector-search-clear"]}
+          onClick={() => onChange("")}
+          aria-label="清除搜索"
+        >
+          ✕
+        </button>
+      )}
+    </div>
+  );
+}
+
+// -------- 厂商多选过滤器 --------
+function ProviderFilterChips({
+  providers,
+  selected,
+  onToggle,
+}: {
+  providers: string[];
+  selected: string[];
+  onToggle: (p: string) => void;
+}) {
+  if (providers.length <= 1) return null;
+  return (
+    <div className={styles["model-selector-filters"]}>
+      {providers.map((p) => (
+        <button
+          key={p}
+          className={clsx(styles["model-selector-filter-chip"], {
+            [styles["model-selector-filter-chip-active"]]: selected.includes(p),
+          })}
+          onClick={() => onToggle(p)}
+        >
+          {p}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** 根据 groundName（API 分类） 或 provider.providerName 取分组名 */
+function getGroupName(m: {
+  groundName?: string;
+  provider?: { providerName: string };
+}) {
+  return m.groundName ?? m.provider?.providerName ?? "Other";
+}
+
+// -------- 模型选择器 --------
+function ModelSelector(props: {
+  models: ReturnType<typeof useAllModels>;
+  currentValue: string;
+  onSelect: (model: string, providerName: string) => void;
+  onClose: () => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [selectedProviders, setSelectedProviders] = useState<string[]>([]);
+
+  const toggleProvider = useCallback((p: string) => {
+    setSelectedProviders((prev) =>
+      prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p],
+    );
+  }, []);
+
+  const providers = useMemo(() => {
+    const seen = new Set<string>();
+    const list: string[] = [];
+    for (const m of props.models) {
+      const p = getGroupName(m);
+      if (!seen.has(p)) {
+        seen.add(p);
+        list.push(p);
+      }
+    }
+    return list.sort((a, b) => a.localeCompare(b));
+  }, [props.models]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return props.models.filter((m) => {
+      const groupName = getGroupName(m);
+      if (
+        selectedProviders.length > 0 &&
+        !selectedProviders.includes(groupName)
+      )
+        return false;
+      if (
+        q &&
+        !m.displayName?.toLowerCase().includes(q) &&
+        !m.name.toLowerCase().includes(q)
+      )
+        return false;
+      return true;
+    });
+  }, [props.models, query, selectedProviders]);
+
+  const groups = useMemo(() => {
+    const map = new Map<string, typeof filtered>();
+    for (const m of filtered) {
+      const p = getGroupName(m);
+      if (!map.has(p)) map.set(p, []);
+      map.get(p)!.push(m);
+    }
+    return Array.from(map.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([provider, models]) => ({
+        provider,
+        models: [...models].sort((a, b) => {
+          const ca = a.created ?? 0;
+          const cb = b.created ?? 0;
+          if (ca !== cb) return cb - ca;
+          return a.name.localeCompare(b.name);
+        }),
+      }));
+  }, [filtered]);
+
+  return (
+    <div className={styles["model-selector-overlay"]} onClick={props.onClose}>
+      <div
+        className={styles["model-selector-panel"]}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ModelSearchInput value={query} onChange={setQuery} />
+        <ProviderFilterChips
+          providers={providers}
+          selected={selectedProviders}
+          onToggle={toggleProvider}
+        />
+        <div className={styles["model-selector-list"]}>
+          {groups.length === 0 && (
+            <div className={styles["model-selector-empty"]}>无匹配模型</div>
+          )}
+          {groups.map(({ provider, models: groupModels }) => (
+            <div key={provider} className={styles["model-selector-group"]}>
+              <div className={styles["model-selector-group-header"]}>
+                <span>{provider}</span>
+                <span className={styles["model-selector-group-count"]}>
+                  {groupModels.length}
+                </span>
+              </div>
+              {groupModels.map((m) => {
+                const value = `${m.name}@${m.provider?.providerName}`;
+                const selected = value === props.currentValue;
+                return (
+                  <div
+                    key={value}
+                    className={clsx(styles["model-selector-item"], {
+                      [styles["model-selector-item-active"]]: selected,
+                    })}
+                    onClick={() => {
+                      props.onSelect(m.name, m.provider?.providerName ?? "");
+                      props.onClose();
+                    }}
+                  >
+                    <Avatar model={m.name} />
+                    <span className={styles["model-selector-item-name"]}>
+                      {m.displayName ?? m.name}
+                    </span>
+                    {selected && (
+                      <span className={styles["model-selector-item-check"]}>
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+// -------- end ModelSelector --------
 
 function ClearContextDivider() {
   const chatStore = useChatStore();
@@ -682,31 +880,22 @@ export function ChatActions(props: {
         />
 
         {showModelSelector && (
-          <Selector
-            defaultSelectedValue={`${currentModel}@${currentProviderName}`}
-            items={models.map((m) => ({
-              title: `${m.displayName}${
-                m?.provider?.providerName
-                  ? " (" + m?.provider?.providerName + ")"
-                  : ""
-              }`,
-              value: `${m.name}@${m?.provider?.providerName}`,
-            }))}
+          <ModelSelector
+            models={models}
+            currentValue={`${currentModel}@${currentProviderName}`}
             onClose={() => setShowModelSelector(false)}
-            onSelection={(s) => {
-              if (s.length === 0) return;
-              const [model, providerName] = getModelProvider(s[0]);
+            onSelect={(model, providerName) => {
               chatStore.updateTargetSession(session, (session) => {
                 session.mask.modelConfig.model = model as ModelType;
                 session.mask.modelConfig.providerName =
                   providerName as ServiceProvider;
                 session.mask.syncGlobalConfig = false;
               });
-              if (providerName == "ByteDance") {
+              if (providerName === "ByteDance") {
                 const selectedModel = models.find(
                   (m) =>
-                    m.name == model &&
-                    m?.provider?.providerName == providerName,
+                    m.name === model &&
+                    m?.provider?.providerName === providerName,
                 );
                 showToast(selectedModel?.displayName ?? "");
               } else {

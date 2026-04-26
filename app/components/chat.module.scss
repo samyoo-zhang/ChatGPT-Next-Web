@@ -751,3 +751,194 @@
     }
   }
 }
+
+// -------- ModelSelector --------
+.model-selector-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.model-selector-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(520px, 92vw);
+  max-height: min(680px, 90vh);
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+// 吸顶搜索栏
+.model-selector-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-in-light);
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  z-index: 1;
+
+  .model-selector-search-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    opacity: 0.4;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: var(--black);
+
+    &::placeholder {
+      color: var(--black);
+      opacity: 0.35;
+    }
+  }
+
+  .model-selector-search-clear {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0.4;
+    color: var(--black);
+
+    &:hover {
+      opacity: 0.8;
+      background: rgba(0, 0, 0, 0.06);
+    }
+  }
+}
+
+// 厂商多选过滤器
+.model-selector-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-in-light);
+  background: var(--white);
+}
+
+.model-selector-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--black);
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  &.model-selector-filter-chip-active {
+    background: var(--primary);
+    color: #fff;
+  }
+}
+
+// 模型列表
+.model-selector-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.model-selector-empty {
+  padding: 32px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--black);
+  opacity: 0.4;
+}
+
+// 厂商分组标题
+.model-selector-group {
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--black);
+    opacity: 0.45;
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    z-index: 1;
+  }
+}
+
+.model-selector-group-count {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+// 单条模型项
+.model-selector-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: background 0.12s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  &:active {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  &.model-selector-item-active {
+    background: rgba(var(--primary-rgb, 29, 140, 242), 0.08);
+
+    .model-selector-item-name {
+      color: var(--primary);
+      font-weight: 500;
+    }
+  }
+
+  &-name {
+    flex: 1;
+    font-size: 13px;
+    color: var(--black);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &-check {
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+}
+// -------- end ModelSelector --------

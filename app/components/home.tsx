@@ -26,7 +26,7 @@ import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
 import { AuthPage } from "./auth";
 import { getClientConfig } from "../config/client";
-import { type ClientApi, getClientApi } from "../client/api";
+import { fetchRemoteModels } from "../utils/fetch-models";
 import { useAccessStore } from "../store";
 import clsx from "clsx";
 import { initializeMcpSystem, isMcpEnabled } from "../mcp/actions";
@@ -223,18 +223,14 @@ function HomeContainer() {
 export function useLoadData() {
   const config = useAppConfig();
 
-  const api: ClientApi = getClientApi(config.modelConfig.providerName);
-
   useEffect(() => {
-    (async () => {
-      const models = await api.llm.models();
-      config.mergeModels(models);
-    })();
+    fetchRemoteModels(config.mergeModels);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }
 
 export function Home() {
+  console.log("show render Home");
   useSwitchTheme();
   useLoadData();
   useHtmlLang();
